@@ -1,14 +1,14 @@
 {
   "@context": "https://w3id.org/codemeta/3.0",
   "@type": "SoftwareSourceCode",
-  "name": "ePoc Mobile",
-  "description": "Mobile and web player for ePoc (Electronic Pocket Open Course), a free and open-source solution for micro-learning developed by Inria.",
-  "identifier": "epoc-mobile",
-  "version": "2.0.3",
+  "name": "ePoc Player",
+  "description": "Mobile, web and SCORM player for ePoc (Electronic Pocket Open Course), a free and open-source solution for micro-learning developed by Inria.",
+  "identifier": "epoc-player",
+  "version": "3.0.0",
   "license": "https://cecill.info/licences/Licence_CeCILL-B_V1-en.html",
   "url": "https://epoc.inria.fr",
-  "codeRepository": "https://github.com/ePoc-app/epoc-mobile",
-  "issueTracker": "https://github.com/ePoc-app/epoc-mobile/issues",
+  "codeRepository": "https://github.com/ePoc-app/epoc-player",
+  "issueTracker": "https://github.com/ePoc-app/epoc-player/issues",
   "programmingLanguage": [
     {
       "@type": "ComputerLanguage",
@@ -22,7 +22,8 @@
   "runtimePlatform": [
     "Android",
     "iOS",
-    "Web"
+    "Web",
+    "SCORM"
   ],
   "developmentStatus": "active",
   "dateCreated": "2019-09-24",
@@ -51,6 +52,8 @@
     "e-learning",
     "micro-learning",
     "mobile",
+    "web",
+    "scorm",
     "open-source",
     "ionic",
     "vue",
