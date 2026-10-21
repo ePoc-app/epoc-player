@@ -1,46 +1,46 @@
 PODS:
-  - Capacitor (8.5.2):
+  - Capacitor (8.4.3):
     - CapacitorCordova
-  - CapacitorApp (8.1.1):
+  - CapacitorApp (8.1.2):
     - Capacitor
-  - CapacitorBarcodeScanner (3.1.2):
+  - CapacitorBarcodeScanner (3.1.3):
     - Capacitor
-    - OSBarcodeLib (= 2.2.1)
-  - CapacitorBrowser (8.0.4):
+    - OSBarcodeLib (= 3.0.0)
+  - CapacitorBrowser (8.0.5):
     - Capacitor
-  - CapacitorCordova (8.5.2)
+  - CapacitorCordova (8.4.3)
   - CapacitorDevice (8.0.3):
     - Capacitor
-  - CapacitorFilesystem (8.1.3):
+  - CapacitorFilesystem (8.1.5):
     - Capacitor
-    - IONFilesystemLib (~> 1.1.1)
-  - CapacitorFileTransfer (2.0.5):
+    - IONFilesystemLib (= 2.0.1)
+  - CapacitorFileTransfer (2.0.6):
     - Capacitor
-    - IONFileTransferLib (~> 1.0.2)
-  - CapacitorFileViewer (2.0.3):
+    - IONFileTransferLib (~> 2.0.0)
+  - CapacitorFileViewer (2.0.4):
     - Capacitor
-    - IONFileViewerLib (~> 1.0.4)
+    - IONFileViewerLib (~> 2.0.0)
   - CapacitorHaptics (8.0.2):
     - Capacitor
-  - CapacitorKeyboard (8.0.5):
+  - CapacitorKeyboard (8.0.6):
     - Capacitor
-  - CapacitorScreenOrientation (8.0.1):
+  - CapacitorScreenOrientation (8.0.2):
     - Capacitor
   - CapacitorScreenReader (8.0.1):
     - Capacitor
   - CapacitorSplashScreen (8.0.2):
     - Capacitor
-  - CapacitorStatusBar (8.0.3):
+  - CapacitorStatusBar (8.0.4):
     - Capacitor
-  - CordovaPlugins (8.5.2):
+  - CordovaPlugins (8.4.3):
     - CapacitorCordova
   - EpocCapacitorZip (0.1.2):
     - Capacitor
     - SSZipArchive (~> 2.4.2)
-  - IONFilesystemLib (1.1.4)
-  - IONFileTransferLib (1.0.3)
-  - IONFileViewerLib (1.0.4)
-  - OSBarcodeLib (2.2.1)
+  - IONFilesystemLib (2.0.1)
+  - IONFileTransferLib (2.0.0)
+  - IONFileViewerLib (2.0.0)
+  - OSBarcodeLib (3.0.0)
   - SSZipArchive (2.4.3)
 
 DEPENDENCIES:
@@ -107,27 +107,27 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@epoc/capacitor-zip"
 
 SPEC CHECKSUMS:
-  Capacitor: 59aea4e8bd98b24b798919b4c55ae90c6ded1b0d
-  CapacitorApp: 9fd99482b6536ddf1a54721ce678145fc7fa3418
-  CapacitorBarcodeScanner: f88fd4357624131dc516b6068638248ebaa05c4d
-  CapacitorBrowser: 553fcb154526484a5d12efc38093d3f781cb6a82
-  CapacitorCordova: 5bec5648cbd09a176ce34ce5e7b6cdabb2c8a327
+  Capacitor: dbee476641ba8ea76b35da8a2b8e5d69b0130a4a
+  CapacitorApp: 542f92c179e3e08ed5d787846bcfa1b377e9745e
+  CapacitorBarcodeScanner: 241580be05b671eaeb186c42a5dbc61d864ab1d6
+  CapacitorBrowser: c54567fdaba0ddb67dad113ad12b8ccb910b0a30
+  CapacitorCordova: 63cd8487d6305205acb5ccaa5c4d2b824c6bf2b0
   CapacitorDevice: e5599fa82274e59220170995826a16095ad20c40
-  CapacitorFilesystem: 8ad396fd0d680c15d018577f3d92dc1397f477de
-  CapacitorFileTransfer: cd2506f5a7abde7f7c13882c459e2e6a6b73630b
-  CapacitorFileViewer: 51f5aeacf075ab850beeb51352105d4e7ddb54ea
+  CapacitorFilesystem: 23beb239d41c889b38be13fe6a7a2f28d8250b62
+  CapacitorFileTransfer: aca0f14a8d4e978dbe50b0f252facc47b4a7fcae
+  CapacitorFileViewer: 09d44455173af3459cae09441030dd09ef887e3e
   CapacitorHaptics: 4e1e84c2b74fb5918e403fb8f0e73a07d05937df
-  CapacitorKeyboard: b7df6f45f1072c292d7de8688aa98b9b266b37fe
-  CapacitorScreenOrientation: 07503c9d633377427f1e122449b06b1dbc992d10
+  CapacitorKeyboard: d96c5f659eb0a33dfc734640252836fa9575e8ad
+  CapacitorScreenOrientation: df54d5c403b893a6847fd03af276426a23274fe5
   CapacitorScreenReader: 4faf73361fd8564c6a288050a585ec2dc2a16bc4
   CapacitorSplashScreen: 120117d1b2264bba31a6e6f998f51e510144dd12
-  CapacitorStatusBar: 40bdc21352ecc617ec71c45ea06d669cdd2da8df
-  CordovaPlugins: 329d6d84eb6e23b396cc749dee598d25b1efc79e
+  CapacitorStatusBar: 9b98299f3d119657ea338c047e0b876714c213ad
+  CordovaPlugins: 810b546918021b49ae71575420a67c5c36e89a2b
   EpocCapacitorZip: c8da1d5ed39d45cad7d627f95ad6672ef69d3652
-  IONFilesystemLib: e6610c2b260d15e4b9cb9d5e37a87095479b669e
-  IONFileTransferLib: addbbf50405c163dcd74a7b1bd8c6f9302342be2
-  IONFileViewerLib: 834a41ff8581ca18cb02eb45f76a7dcc853cf3d9
-  OSBarcodeLib: e749f578530593d2e4ea3a2096fecb953fe7a943
+  IONFilesystemLib: 306469e4c563f61de82d7bca2bbfed9e64d1b2d2
+  IONFileTransferLib: b18e8448f765accf4e5dc5905f05ce845bf7bb87
+  IONFileViewerLib: 665aa5918754112a5c1bba18860aa78c830c961e
+  OSBarcodeLib: 27f353bc1292cb4cb5608914a531582f73a0bfdd
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
 
 PODFILE CHECKSUM: 0108e642ad51d4fd6987afda4515c57155bbbaa9

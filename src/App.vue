@@ -3,7 +3,9 @@ import {IonApp, IonContent, IonMenu, IonRouterOutlet, IonSplitPane} from '@ionic
 import WebSidebar from './components/WebSidebar.vue';
 import DetachedAudioPlayer from './components/DetachedAudioPlayer.vue';
 import DetachedVideoPlayer from './components/DetachedVideoPlayer.vue';
-import {StatusBar, Style} from '@capacitor/status-bar';
+import {StatusBar} from '@capacitor/status-bar';
+import {Capacitor, registerPlugin, SystemBars, SystemBarsStyle, SystemBarType} from '@capacitor/core';
+import {Device} from '@capacitor/device';
 import {register} from 'swiper/element/bundle';
 import {useSettingsStore} from './stores/settingsStore';
 import {nextTick, onMounted, watch} from 'vue';
@@ -29,19 +31,45 @@ function applyTheme(theme: 'light' | 'dark') {
     document.documentElement.setAttribute('color-scheme', theme);
 }
 
+// Local Android plugin (android/app/src/main/java/fr/inria/epoc/ThemeBarsPlugin.java)
+const ThemeBars = registerPlugin<{
+  setBackgroundColor(options: { color: string }): Promise<void>
+}>('ThemeBars');
+
+type AndroidBarsMode = 'legacy' | 'padded' | 'edge-to-edge';
+
+async function getAndroidBarsMode(): Promise<AndroidBarsMode | null> {
+    if (Capacitor.getPlatform() !== 'android') return null;
+    const { androidSDKVersion, webViewVersion } = await Device.getInfo();
+    // Android 15 (API 35) and above enforce edge-to-edge: system bars are transparent and drawn over the webview
+    if ((androidSDKVersion ?? 35) < 35) return 'legacy';
+    const webViewMajorVersion = parseInt(webViewVersion, 10);
+    // Below this WebView version, Capacitor pads the webview instead of drawing it behind the system bars
+    if (webViewMajorVersion < 140) return 'padded';
+    return 'edge-to-edge';
+}
+
+
 async function applyStatusBarStyle(theme: 'light' | 'dark') {
+    if (!Capacitor.isNativePlatform()) return;
     try {
-      const statusBarInfo: any = await StatusBar.getInfo();
-      document.documentElement.style.setProperty('--ion-safe-area-top', `${statusBarInfo.height}px`);
-      if (theme === 'dark') {
-        await StatusBar.setStyle({ style: Style.Dark });
-        await StatusBar.setBackgroundColor({ color: '#17191A00' });
+      const style = theme === 'dark' ? SystemBarsStyle.Dark : SystemBarsStyle.Light;
+      const color = theme === 'dark' ? '#17191A' : '#FFFFFF';
+      const androidBarsMode = await getAndroidBarsMode();
+      if (androidBarsMode === 'padded') {
+        await SystemBars.setStyle({ style });
+        await ThemeBars.setBackgroundColor({ color });
+      } else if (androidBarsMode === 'legacy') {
+        const statusBarInfo: any = await StatusBar.getInfo();
+        document.documentElement.style.setProperty('--ion-safe-area-top', `${statusBarInfo.height}px`);
+        // Before edge-to-edge, the status bar has its own opaque background and the navigation bar keeps the system color
+        await SystemBars.setStyle({ style, bar: SystemBarType.StatusBar });
+        await StatusBar.setBackgroundColor({ color });
       } else {
-        await StatusBar.setStyle({ style: Style.Light });
-        await StatusBar.setBackgroundColor({ color: '#ffffff00' });
+        await SystemBars.setStyle({ style });
       }
     } catch (e) {
-        // In browser
+        console.warn('Unable to apply system bars style', e);
     }
 }
 
