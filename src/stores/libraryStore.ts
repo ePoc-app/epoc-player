@@ -12,7 +12,7 @@ import {
 import { useRouter } from 'vue-router';
 import { useSettingsStore } from './settingsStore';
 import { useReadingStore } from './readingStore';
-import type { EpocCollection, EpocLibrary, EpocLibraryState, EpocMetadata, License, Publisher } from '@/types/epoc';
+import type { EpocCollection, EpocLibrary, EpocLibraryState, EpocMetadata, License } from '@/types/epoc';
 import type { Reading } from '@/types/reading';
 import { deleteFolder, download, unzip } from '@/utils/file';
 import { readEpocContent } from '@/utils/epocService';
@@ -318,10 +318,10 @@ export const useLibraryStore = defineStore('library', () => {
     async function addCustomCollection(url: string) {
         const error = await checkCustomCollectionUrl(url);
         if (error) {
-            await presentToast(error, 'danger');
+            await presentToast(i18n.global.t(error), 'danger');
             return;
         }
-        await presentToast('CUSTOM_COLLECTION.SUCCESS', 'success');
+        await presentToast(i18n.global.t('CUSTOM_COLLECTION.SUCCESS'), 'success');
         settingsStore.settings.customLibrairies.push(url);
         settingsStore.updateSettings({});
         await fetchCustomCollections();
@@ -370,22 +370,6 @@ export const useLibraryStore = defineStore('library', () => {
         await alert.present();
     }
 
-    async function openAboutPublisher(publisher: Publisher) {
-        const message = i18n.global.t('PUBLISHER_MODAL.MESSAGE', {
-            name: publisher.name,
-            description: publisher.description,
-            email: publisher.email,
-            website: publisher.website
-        });
-        const alert = await alertController.create({
-            header: i18n.global.t('PUBLISHER_MODAL.ABOUT'),
-            cssClass: 'alert-alignleft',
-            message,
-            buttons: ['OK'],
-        });
-        await alert.present();
-    }
-
     // --- Initialization ---
     fetchOfficialCollections().then();
     settingsStore.$subscribe((_, state) => {
@@ -421,6 +405,5 @@ export const useLibraryStore = defineStore('library', () => {
         addCustomCollection,
         confirmReset,
         confirmDelete,
-        openAboutPublisher,
     };
 });

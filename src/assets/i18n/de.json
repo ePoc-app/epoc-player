@@ -9,6 +9,10 @@
     "ADD_EPOC": "Fügen Sie Ihr ePoc hinzu",
     "IMPORT": "Import von",
     "VIEW_ALL": "Alle anzeigen",
+    "VIEW_MORE": "Mehr anzeigen",
+    "VIEW_LESS": "Weniger anzeigen",
+    "EMAIL": "E-Mail",
+    "WEBSITE": "Webseite",
     "DOWNLOAD_ERROR": "Fehler beim Herunterladen der ePoc",
     "TITLE": "Bibliothek"
   },
@@ -116,10 +120,6 @@
     "VIEW_MORE": "Mehr anzeigen",
     "VIEW_LESS": "Weniger anzeigen",
     "NEXT_CHAPTER": "Nächstes kapitel"
-  },
-  "PUBLISHER_MODAL": {
-    "ABOUT": "Über den Herausgeber",
-    "MESSAGE": "<br/><br/><strong>Name :</strong> {name}<br/><br/><strong>Beschreibung :</strong> {description}<br/><br/><strong>Email :</strong> <a href='mailto:{email}' title='{name}' target='_blank'>{email}</a><br/><br/><strong>Webseite :</strong> <a href='{website}' title='{name}' target='_blank'>{website}</a><br/><br/>"
   },
   "LICENSE_MODAL": {
     "HEADER": "Lizenz",

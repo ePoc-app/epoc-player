@@ -11,7 +11,6 @@ import {
   IonButtons
 } from '@ionic/vue';
 import {
-  informationCircleOutline,
   cloudDownloadOutline,
   arrowForwardOutline,
   cogOutline,
@@ -21,7 +20,7 @@ import {
 } from 'ionicons/icons';
 import { useLibraryStore } from '@/stores/libraryStore';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { computed } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 
 const libraryStore = useLibraryStore();
 const route = useRoute();
@@ -29,8 +28,27 @@ const router = useRouter();
 const collection = computed(() => {
     const collectionId = route.params.collection_id?.toString();
 
-    return collectionId ? libraryStore.officialCollections[collectionId] : undefined;
+    return collectionId ? libraryStore.collections[collectionId] : undefined;
 });
+
+// Clamp the mobile description to 3 lines, with a toggle when it overflows
+const descriptionEl = ref<HTMLElement>();
+const descriptionExpanded = ref(false);
+const descriptionOverflows = ref(false);
+const descriptionObserver = new ResizeObserver(() => {
+    const el = descriptionEl.value;
+    if (!el || descriptionExpanded.value) return;
+    descriptionOverflows.value = el.scrollHeight > el.clientHeight + 1;
+});
+
+watch(descriptionEl, (el, oldEl) => {
+    if (oldEl) descriptionObserver.unobserve(oldEl);
+    if (el) descriptionObserver.observe(el);
+});
+watch(() => collection.value?.id, () => {
+    descriptionExpanded.value = false;
+});
+onUnmounted(() => descriptionObserver.disconnect());
 </script>
 
 <template>
@@ -41,14 +59,6 @@ const collection = computed(() => {
                 <ion-back-button text="" defaultHref="/library" color="inria-icon"></ion-back-button>
               </ion-buttons>
                 <ion-title>{{ collection.title }}</ion-title>
-                <ion-button role="button" class="icon-btn" @click="libraryStore.openAboutPublisher(collection.publisher)" slot="end">
-                    <ion-icon
-                        aria-label="Informations"
-                        slot="icon-only"
-                        :icon="informationCircleOutline"
-                        color="inria-icon"
-                    />
-                </ion-button>
             </ion-toolbar>
         </ion-header>
 
@@ -60,6 +70,25 @@ const collection = computed(() => {
                     :style="'background-image:url(' + collection.publisher.logo + ')'"
                 />
                 <div class="publisher-name" v-else>{{ collection.publisher.name }}</div>
+            </div>
+            <div class="mobile-only publisher-info">
+                <template v-if="collection.publisher.description">
+                    <p ref="descriptionEl" class="publisher-description" :class="{ expanded: descriptionExpanded }">
+                        {{ collection.publisher.description }}
+                    </p>
+                    <button
+                        v-if="descriptionOverflows"
+                        class="publisher-description-toggle"
+                        :aria-expanded="descriptionExpanded"
+                        @click="descriptionExpanded = !descriptionExpanded"
+                    >
+                        {{ descriptionExpanded ? $t('LIBRARY_PAGE.VIEW_LESS') : $t('LIBRARY_PAGE.VIEW_MORE') }}
+                    </button>
+                </template>
+                <div class="publisher-links">
+                    <a v-if="collection.publisher.email" :href="`mailto:${collection.publisher.email}`" :title="collection.publisher.email"><ion-icon :icon="mailOutline" aria-hidden="true"></ion-icon>{{ $t('LIBRARY_PAGE.EMAIL') }}</a>
+                    <a v-if="collection.publisher.website" :href="collection.publisher.website" target="_blank" rel="noopener" :title="collection.publisher.website"><ion-icon :icon="linkOutline" aria-hidden="true"></ion-icon>{{ $t('LIBRARY_PAGE.WEBSITE') }}</a>
+                </div>
             </div>
 
             <div class="web-only">
@@ -73,9 +102,9 @@ const collection = computed(() => {
                 <div class="web-page-header-info">
                   <h1>{{ collection.title }}</h1>
                   <p v-if="collection.publisher.description">{{ collection.publisher.description }}</p>
-                  <div class="web-page-header-links">
-                    <a v-if="collection.publisher.email" :href="`mailto:${collection.publisher.email}`"><ion-icon :icon="mailOutline"></ion-icon>{{ collection.publisher.email }}</a>
-                    <a v-if="collection.publisher.website" :href="collection.publisher.website" target="_blank" rel="noopener"><ion-icon :icon="linkOutline"></ion-icon>{{ collection.publisher.website }}</a>
+                  <div class="publisher-links">
+                    <a v-if="collection.publisher.email" :href="`mailto:${collection.publisher.email}`" :title="collection.publisher.email"><ion-icon :icon="mailOutline" aria-hidden="true"></ion-icon>{{ $t('LIBRARY_PAGE.EMAIL') }}</a>
+                    <a v-if="collection.publisher.website" :href="collection.publisher.website" target="_blank" rel="noopener" :title="collection.publisher.website"><ion-icon :icon="linkOutline" aria-hidden="true"></ion-icon>{{ $t('LIBRARY_PAGE.WEBSITE') }}</a>
                   </div>
                 </div>
               </div>
@@ -229,29 +258,61 @@ ion-toolbar {
             color: var(--ion-color-text-2);
         }
     }
+}
 
-    &-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem 1.5rem;
-        margin-top: 0.5rem;
+.publisher-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 0.5rem;
 
-        a {
-            font-size: 0.875rem;
-            color: var(--ion-color-inria);
-            text-decoration: none;
+    a {
+        font-size: 0.875rem;
+        color: var(--ion-color-inria);
+        text-decoration: none;
+        white-space: nowrap;
 
-            &:hover {
-                text-decoration: underline;
-            }
+        &:hover {
+            text-decoration: underline;
+        }
 
-            ion-icon {
-              display: inline-block;
-              vertical-align: middle;
-              font-size: 1rem;
-              margin-right: 5px;
-            }
+        ion-icon {
+          display: inline-block;
+          vertical-align: middle;
+          font-size: 1rem;
+          margin-right: 5px;
         }
     }
+}
+
+.publisher-info {
+    padding: 0 1rem 1rem;
+}
+
+.publisher-description {
+    margin: 0 0 0.25rem;
+    font-size: 0.9rem;
+    color: var(--ion-color-text-2);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+
+    &.expanded {
+        display: block;
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
+    }
+}
+
+.publisher-description-toggle {
+    padding: 0;
+    margin-bottom: 0.5rem;
+    background: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ion-color-inria);
+    cursor: pointer;
 }
 </style>
