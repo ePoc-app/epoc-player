@@ -1,0 +1,9 @@
+for_platform :ios do
+  app_identifier("fr.inria.learninglab.epoc")
+  itc_team_id "299702"
+end
+
+for_platform :android do
+  package_name("fr.inria.epoc")
+  json_key_file(ENV["PLAY_JSON_KEY_PATH"])
+end

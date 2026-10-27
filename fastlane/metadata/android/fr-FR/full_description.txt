@@ -1,0 +1,27 @@
+ePoc (Electronic Pocket Open Course) est une solution libre et gratuite de micro-learning : des formations courtes, ludiques et consultables hors ligne, que chacun peut créer, partager et suivre sur son téléphone.
+
+CRÉEZ VOS PROPRES ePocs
+Avec ePoc Editor, logiciel libre et gratuit pour ordinateur (Windows et macOS), concevez une formation sans compétence technique : textes, vidéos, sons, images et activités interactives. Prévisualisez-la, puis exportez-la en un seul fichier .epoc.
+
+PARTAGEZ ET IMPORTEZ
+Importez un ePoc ou une collection entière depuis un fichier, un lien ou un QR code. Enseignants, formateurs, associations, entreprises : diffusez vos contenus à vos apprenants, sans inscription.
+
+APPRENEZ PAS À PAS
+• Des chapitres de quelques minutes, à suivre à votre rythme
+• Des activités interactives : questions à choix, glisser-déposer, cartes à trier, remise en ordre…
+• Des points, des badges et une attestation de réussite
+• Une consultation hors ligne une fois l'ePoc téléchargé
+
+DÉCOUVREZ LES ePocs INRIA
+L'application propose aussi une collection d'ePocs gratuits sur le numérique, conçus par des chercheurs Inria : intelligence artificielle, données, vie privée, impact environnemental du smartphone, robotique…
+
+RESPECTUEUX DE VOTRE VIE PRIVÉE
+Aucun compte, aucune publicité, aucune collecte de données personnelles.
+
+CONFORTABLE À LIRE
+Mode sombre, taille du texte et interligne réglables, police adaptée aux personnes dyslexiques.
+
+UN PROJET OUVERT
+ePoc est développé par le Learning Lab d'Inria sous licence libre. Les ePocs peuvent aussi être exportés au format SCORM pour les plateformes de formation.
+
+Plus d'informations : https://epoc.inria.fr

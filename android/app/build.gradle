@@ -21,8 +21,9 @@ android {
         applicationId "fr.inria.epoc"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode getVersionCode()
-        versionName "3.0.0"
+        // fastlane passes -PversionCode (latest Play Store version code + 1)
+        versionCode project.hasProperty('versionCode') ? project.property('versionCode').toInteger() : getVersionCode()
+        versionName new groovy.json.JsonSlurper().parse(file('../../package.json')).version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

@@ -1,0 +1,57 @@
+{
+    "fr": {
+        "header": "Créez, partagez, apprenez",
+        "library": "Créez, partagez et suivez des micro-formations",
+        "content": "Des contenus courts, consultables même hors ligne",
+        "create": "Créez vos propres ePocs avec l'éditeur libre et gratuit",
+        "score": "Gagnez des badges et obtenez votre attestation",
+        "quiz": "Des activités interactives pour s'exercer",
+        "inria": "Découvrez les ePocs Inria sur le numérique",
+        "privacy": "Libre, sans compte, sans pub, sans collecte de données",
+        "communityCollection": "ePocs de la communauté"
+    },
+    "en": {
+        "header": "Create, share and learn",
+        "library": "Create, share and take bite-sized courses",
+        "content": "Short lessons you can read even offline",
+        "create": "Create your own ePocs with the free, open-source editor",
+        "score": "Earn badges and get your certificate",
+        "quiz": "Interactive activities to practice",
+        "inria": "Discover Inria ePocs on digital science",
+        "privacy": "Open source, no account, no ads, no data collection",
+        "communityCollection": "Community ePocs"
+    },
+    "de": {
+        "header": "Erstellen, teilen, lernen",
+        "library": "Mikro-Lernkurse erstellen, teilen und nutzen",
+        "content": "Kurze Inhalte, auch offline verfügbar",
+        "create": "Eigene ePocs mit dem freien, kostenlosen Editor erstellen",
+        "score": "Badges sammeln und Teilnahmebescheinigung erhalten",
+        "quiz": "Interaktive Aktivitäten zum Üben",
+        "inria": "Die Inria-ePocs zur digitalen Welt entdecken",
+        "privacy": "Open Source, ohne Konto, ohne Werbung, ohne Datensammlung",
+        "communityCollection": "ePocs der Community"
+    },
+    "es": {
+        "header": "Crea, comparte y aprende",
+        "library": "Crea, comparte y sigue microcursos",
+        "content": "Contenidos breves, disponibles incluso sin conexión",
+        "create": "Crea tus propios ePocs con el editor libre y gratuito",
+        "score": "Gana insignias y obtén tu certificado",
+        "quiz": "Actividades interactivas para practicar",
+        "inria": "Descubre los ePocs de Inria sobre el mundo digital",
+        "privacy": "Libre, sin cuenta, sin anuncios, sin recogida de datos",
+        "communityCollection": "ePocs de la comunidad"
+    },
+    "it": {
+        "header": "Crea, condividi e impara",
+        "library": "Crea, condividi e segui micro-corsi",
+        "content": "Contenuti brevi, consultabili anche offline",
+        "create": "Crea i tuoi ePoc con l'editor libero e gratuito",
+        "score": "Ottieni badge e il tuo attestato",
+        "quiz": "Attività interattive per esercitarsi",
+        "inria": "Scopri gli ePoc Inria sul digitale",
+        "privacy": "Libero, senza account, senza pubblicità, senza raccolta di dati",
+        "communityCollection": "ePoc della community"
+    }
+}

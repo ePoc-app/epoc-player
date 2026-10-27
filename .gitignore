@@ -48,3 +48,14 @@ screenshots/
 
 # Demo assets (used for editor preview)
 /public/assets/demo/
+
+# fastlane
+fastlane/.env
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/test_output/
+fastlane/build/
+fastlane/metadata/android/*/images/*Screenshots/
+fastlane/creative-assets/
+/vendor/bundle
+/.bundle

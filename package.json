@@ -1,6 +1,6 @@
 {
   "name": "epoc-player",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "Inria Learning Lab",
   "homepage": "https://epoc.inria.fr",
   "scripts": {
@@ -17,7 +17,8 @@
     "test:e2e": "cypress run",
     "test:unit": "vitest",
     "lint": "eslint .",
-    "resources": "rm -rf resources/* && cp -R resources-common/* resources/ && npx capacitor-assets generate"
+    "resources": "rm -rf resources/* && cp -R resources-common/* resources/ && npx capacitor-assets generate",
+    "store:screenshots": "node scripts/store-screenshots/capture.mjs"
   },
   "private": true,
   "dependencies": {
@@ -82,5 +83,8 @@
   "overrides": {
     "rollup": "4.44.0"
   },
-  "description": "Lecteur web et mobile d'ePoc (Electronic Pocket Open Course)"
+  "description": "Lecteur web et mobile d'ePoc (Electronic Pocket Open Course)",
+  "devDependencies": {
+    "playwright": "^1.64.1"
+  }
 }

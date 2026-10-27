@@ -1,0 +1,1 @@
+course,training,e-learning,MOOC,teacher,trainer,quiz,QR code,offline,SCORM,editor,education,Inria

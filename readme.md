@@ -90,6 +90,29 @@ On Android, you may need to invalidate caches (`File > Invalidate Caches / Resta
 
 More info: [Android](https://ionicframework.com/docs/developing/android) · [iOS](https://ionicframework.com/docs/developing/ios)
 
+## Store publishing (fastlane)
+
+Store texts live in `fastlane/metadata` (iOS and Android, one folder per locale) and the version comes from `package.json`. Build numbers are computed from the stores (latest + 1).
+
+Setup: Ruby ≥ 3.2 recommended, `bundle install`, then copy `fastlane/.env.example` to `fastlane/.env` and fill in the API keys and Android keystore.
+
+```bash
+npm run store:screenshots              # localized screenshots (--lang fr,en --device iphone,ipad,android,android-tablet)
+
+bundle exec fastlane ios pull_metadata     # download current store texts
+bundle exec fastlane ios metadata screenshots:true
+bundle exec fastlane ios beta              # build + TestFlight
+bundle exec fastlane ios release           # submit latest TestFlight build for review
+
+bundle exec fastlane android pull_metadata
+bundle exec fastlane android metadata
+bundle exec fastlane android beta          # build + internal track
+bundle exec fastlane android release       # promote internal to production (rollout:0.2 for staged)
+```
+
+Screenshots are generated from the web app with Playwright (`scripts/store-screenshots`, captions in `captions.json`) and are not committed.
+The same script renders one App Store creative asset per locale (`fastlane/creative-assets/<locale>/header-search.png`, 16:9, used as product page header and search results asset on iOS 27+). fastlane cannot upload it yet: add it in App Store Connect > Asset Library.
+
 ## Tests and lint
 
 ```bash

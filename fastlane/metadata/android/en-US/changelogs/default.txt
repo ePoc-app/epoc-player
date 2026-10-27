@@ -1,0 +1,5 @@
+ePoc 3.0
+• New navigation menu inside ePocs, highlighting the current page
+• Easier list-based answer activities
+• Better display on recent Android phones
+• Bug fixes and improvements

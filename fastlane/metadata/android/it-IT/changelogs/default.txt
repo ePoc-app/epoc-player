@@ -1,0 +1,5 @@
+ePoc 3.0
+• Nuovo menu di navigazione negli ePoc, con la pagina corrente evidenziata
+• Attività con elenchi di scelta più semplici da usare
+• Migliore visualizzazione sui telefoni Android recenti
+• Correzioni e miglioramenti
