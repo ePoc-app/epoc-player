@@ -9,6 +9,7 @@ import { Directory, Filesystem } from '@capacitor/filesystem';
 import { IonicVue } from '@ionic/vue';
 import { useStorage } from '@/composables/useStorage';
 import VueMatomo from 'vue-matomo';
+import { scormInit } from '@/scorm';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -53,6 +54,9 @@ if ('serviceWorker' in navigator && Capacitor.getPlatform() === 'web' && import.
 
 function init() {
     const pinia = createPinia();
+
+    // No-op outside of an LMS
+    scormInit();
 
     const app = createApp(App)
         .use(IonicVue, {

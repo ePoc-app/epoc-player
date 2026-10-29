@@ -42,7 +42,7 @@ import { CONTENT_TYPE_ICONS } from '@/types/content-icons';
 import doubleGauche from '@/assets/icon/double-gauche.svg?url';
 import doubleDroite from '@/assets/icon/double-droite.svg?url';
 import modulecheck from '@/assets/icon/modulecheck.svg?url';
-import {scormComplete, scormSetScore} from '@/scorm';
+import { scormReportProgress } from '@/scorm';
 
 const INTERACTIVE_ELEMENTS = ['ion-icon', 'button', 'ion-button', 'ion-checkbox', 'ion-radio', 'span'];
 
@@ -129,6 +129,19 @@ const assessmentData = computed(() => {
     return { totalUserScore, totalScore };
 });
 
+const certificateUnlocked = computed(() => {
+    if (!epoc.value || !reading.value) return false;
+
+    const meetsScoreRequirements = assessmentData.value.totalUserScore >= epoc.value.certificateScore;
+    const meetsBadgeRequirement = (reading.value.badges.length || 0) >= epoc.value.certificateBadgeCount;
+    return meetsScoreRequirements && meetsBadgeRequirement;
+});
+
+const scorePercent = computed(() => {
+    const { totalUserScore, totalScore } = assessmentData.value;
+    return totalScore > 0 ? Math.round((totalUserScore / totalScore) * 100) : 0;
+});
+
 const readerStyles = computed(() => {
     const defaultStyles = {
         'font-family': 'Inria Sans',
@@ -155,6 +168,8 @@ watch(
     },
     { immediate: true }
 );
+
+watch([scorePercent, certificateUnlocked], ([score, unlocked]) => scormReportProgress(score, unlocked));
 
 watch(
     () => mediaPlayerStore.isTimelineDragging,
@@ -201,14 +216,9 @@ function initializeData() {
 function checkForCertificate() {
     if (!epoc.value || !reading.value) return;
 
-    const meetsScoreRequirements = assessmentData.value.totalUserScore >= epoc.value.certificateScore;
-    const meetsBadgeRequirement = (reading.value.badges.length || 0) >= epoc.value.certificateBadgeCount;
-
-    if (meetsScoreRequirements && meetsBadgeRequirement && !reading.value.certificateShown) {
+    if (certificateUnlocked.value && !reading.value.certificateShown) {
         certificateShown.value = true;
         readingStore.updateCertificateShown(epoc.value.id, true);
-        scormSetScore(assessmentData.value.totalUserScore, 0, assessmentData.value.totalScore);
-        scormComplete();
         trackEvent(epoc.value.id, `${epoc.value.id} / Certificate unlocked`);
     }
 }

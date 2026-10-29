@@ -44,6 +44,7 @@ export function scormInit(): boolean {
 
     if (initialized) {
         console.debug(`[SCORM] Initialised with SCORM ${version}`);
+        markStarted();
         window.addEventListener('beforeunload', scormFinish);
     } else if (version === null) {
         console.debug('[SCORM] No SCORM API found — running outside LMS, no-op mode.');
@@ -52,24 +53,37 @@ export function scormInit(): boolean {
     return initialized;
 }
 
-export function scormComplete(status: 'completed' | 'passed' | 'failed' = 'completed'): void {
+function markStarted(): void {
+    if (version === '1.2' && api12) {
+        if (api12.LMSGetValue('cmi.core.lesson_status') === 'not attempted') {
+            api12.LMSSetValue('cmi.core.lesson_status', 'incomplete');
+            api12.LMSCommit('');
+        }
+    } else if (version === '2004' && api2004) {
+        if (['unknown', 'not attempted'].includes(api2004.GetValue('cmi.completion_status'))) {
+            api2004.SetValue('cmi.completion_status', 'incomplete');
+            api2004.Commit('');
+        }
+    }
+}
+
+export function scormReportProgress(scorePercent: number, passed: boolean): void {
     if (!initialized) return;
 
-    if (version === '1.2' && api12) {
-        api12.LMSSetValue('cmi.core.lesson_status', status);
-        api12.LMSCommit('');
-        api12.LMSFinish('');
-    } else if (version === '2004' && api2004) {
-        const successStatus = status === 'passed' ? 'passed' : status === 'failed' ? 'failed' : 'unknown';
-        api2004.SetValue('cmi.completion_status', 'completed');
-        api2004.SetValue('cmi.success_status', successStatus);
-        api2004.Commit('');
-        api2004.Terminate('');
-    }
+    scormSetScore(scorePercent);
 
-    initialized = false;
-    window.removeEventListener('beforeunload', scormFinish);
-    console.debug(`[SCORM] Session completed (status: ${status})`);
+    if (version === '1.2' && api12) {
+        const alreadyPassed = api12.LMSGetValue('cmi.core.lesson_status') === 'passed';
+        api12.LMSSetValue('cmi.core.lesson_status', passed || alreadyPassed ? 'passed' : 'incomplete');
+        api12.LMSCommit('');
+    } else if (version === '2004' && api2004) {
+        const alreadyPassed = api2004.GetValue('cmi.success_status') === 'passed';
+        if (passed || alreadyPassed) {
+            api2004.SetValue('cmi.completion_status', 'completed');
+            api2004.SetValue('cmi.success_status', 'passed');
+        }
+        api2004.Commit('');
+    }
 }
 
 export function scormSetScore(score: number, min = 0, max = 100): void {
