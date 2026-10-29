@@ -11,6 +11,7 @@ import {
     IonButton,
     alertController,
     loadingController,
+    onIonViewWillEnter,
 } from '@ionic/vue';
 import { ref, reactive, computed, Ref, watch } from 'vue';
 import { useEpocStore } from '@/stores/epocStore';
@@ -267,6 +268,14 @@ watch(
     },
     { immediate: true }
 );
+
+onIonViewWillEnter(() => {
+    if (badgeMode.value) {
+        unlockedBadges.value = reading.value ? reading.value.badges : [];
+    }
+
+    setAssessmentsData();
+});
 
 const denormalizedBadges = computed(() => denormalize(epoc.value!.badges));
 </script>
