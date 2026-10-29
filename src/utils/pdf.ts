@@ -17,7 +17,7 @@ const colors = {
     lightblue: '#edf3f8',
 };
 
-export async function generatePdf(epoc: Epoc, rootFolder: string, unlockedBadges: uid[]): Promise<jsPDF> {
+export async function generatePdf(epoc: Epoc, rootFolder: string, unlockedBadges: uid[], isInriaEpoc = false): Promise<jsPDF> {
     const { user } = useUser();
 
     const password = Math.random().toString(36).substring(2, 12);
@@ -39,6 +39,8 @@ export async function generatePdf(epoc: Epoc, rootFolder: string, unlockedBadges
 
     img.src = 'assets/img/fond-attestation.png';
     doc.addImage(img, 'PNG', 0, 0, 210, 297);
+    const logoUrl = getLogoUrl(epoc, rootFolder, isInriaEpoc);
+    if (logoUrl) await insertLogo(doc, logoUrl);
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(15);
     doc.setTextColor(colors.orange);
@@ -122,6 +124,7 @@ export async function generatePdf(epoc: Epoc, rootFolder: string, unlockedBadges
 function svgToPNG(url: string, width: number): Promise<string | null> {
     return new Promise((resolve) => {
         const img = document.createElement('img');
+        img.crossOrigin = 'anonymous';
         img.onload = () => {
             document.body.appendChild(img);
             const canvas = document.createElement('canvas');
@@ -145,6 +148,32 @@ function svgToPNG(url: string, width: number): Promise<string | null> {
         };
         img.src = url;
     });
+}
+
+// Inria Learning Lab logo for Inria ePocs, otherwise the publisher logo defined in the ePoc (if any)
+function getLogoUrl(epoc: Epoc, rootFolder: string, isInriaEpoc: boolean): string | undefined {
+    if (isInriaEpoc) return 'assets/img/logo-ill.png';
+
+    const logo = epoc.publisher?.logo;
+    if (!logo) return undefined;
+    return /^(https?|file):\/\//.test(logo) ? logo : rootFolder + logo;
+}
+
+// Top right corner, facing the ePoc logo of the background
+async function insertLogo(doc: jsPDF, url: string) {
+    const maxWidth = 50;
+    const maxHeight = 16;
+    const right = 186;
+    const centerY = 27;
+
+    const data = await svgToPNG(url, 600);
+    if (!data) return;
+
+    const { width, height } = doc.getImageProperties(data);
+    const scale = Math.min(maxWidth / width, maxHeight / height);
+    const w = width * scale;
+    const h = height * scale;
+    doc.addImage(data, 'PNG', right - w, centerY - h / 2, w, h);
 }
 
 async function insertBadges(

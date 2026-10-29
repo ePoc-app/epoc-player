@@ -29,6 +29,7 @@ import { Directory, Filesystem } from '@capacitor/filesystem';
 import jsPDF from 'jspdf';
 import { generatePdf } from '@/utils/pdf';
 import { useReadingStore } from '@/stores/readingStore';
+import { useLibraryStore } from '@/stores/libraryStore';
 import { storeToRefs } from 'pinia';
 import type { Reading } from '@/types/reading';
 import type { uid } from '@epoc/epoc-types/dist/v1';
@@ -41,6 +42,7 @@ const { t } = useI18n();
 const epocStore = useEpocStore();
 const settingsStore = useSettingsStore();
 const readingStore = useReadingStore();
+const libraryStore = useLibraryStore();
 
 const { epoc } = storeToRefs(epocStore);
 const { readings } = storeToRefs(readingStore);
@@ -97,7 +99,8 @@ async function getCertificate() {
         }
 
         await presentLoading();
-        downloadPdf(await generatePdf(epoc.value, epocStore.rootFolder, unlockedBadges.value));
+        const isInriaEpoc = libraryStore.isInriaEpoc(epoc.value);
+        downloadPdf(await generatePdf(epoc.value, epocStore.rootFolder, unlockedBadges.value, isInriaEpoc));
     }
 }
 

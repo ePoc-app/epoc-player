@@ -12,7 +12,7 @@ import {
 import { useRouter } from 'vue-router';
 import { useSettingsStore } from './settingsStore';
 import { useReadingStore } from './readingStore';
-import type { EpocCollection, EpocLibrary, EpocLibraryState, EpocMetadata, License } from '@/types/epoc';
+import type { Epoc, EpocCollection, EpocLibrary, EpocLibraryState, EpocMetadata, License } from '@/types/epoc';
 import type { Reading } from '@/types/reading';
 import { deleteFolder, download, unzip } from '@/utils/file';
 import { readEpocContent } from '@/utils/epocService';
@@ -29,6 +29,8 @@ export const useLibraryStore = defineStore('library', () => {
     const { isPreview } = useAppMode();
 
     const officialCollectionsUrl = 'https://epoc.inria.fr/official-collections.json';
+    const illCollectionId = 'fr.inria.learninglab.epocs';
+    const illPublisherId = 'fr.inria.learninglab';
 
     const officialCollections = ref<Record<string, EpocCollection>>({});
     const customCollections = ref<Record<string, EpocCollection>>({});
@@ -370,6 +372,12 @@ export const useLibraryStore = defineStore('library', () => {
         await alert.present();
     }
 
+    // Publisher defined in the ePoc first, then the collection it comes from
+    function isInriaEpoc(epoc: Epoc): boolean {
+        if (epoc.publisher) return epoc.publisher.id === illPublisherId;
+        return !epoc.id.startsWith('local-') && findCollectionByEpocId(epoc.id) === illCollectionId;
+    }
+
     // --- Initialization ---
     fetchOfficialCollections().then();
     settingsStore.$subscribe((_, state) => {
@@ -394,6 +402,7 @@ export const useLibraryStore = defineStore('library', () => {
         fetchCustomCollections,
         findCollectionByEpocId,
         getCollectionLicense,
+        isInriaEpoc,
         updateEpocCollectionState,
         updateEpocProgress,
         downloadEpoc,
