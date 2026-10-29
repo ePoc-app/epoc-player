@@ -123,8 +123,10 @@
   },
   "LICENSE_MODAL": {
     "HEADER": "License",
-    "MESSAGE": "Conditions of use for ePoc content <strong>\"{epoc}\"</strong>:<br/><br/>Unless otherwise stated, the resources in this ePoc are distributed under the <a href=\"{licenseUrl}\" title=\"License link\" target=\"_blank\">{licenseName}</a> license. <br/><br/>If you are using ePoc content, here is the attribution to be added depending on the use:<br/>Credit: ePoc <strong>\"{epoc}\"</strong>, published under the {licenseName} license in the application <a href=\"https://epoc.inria.fr/\" title=\"Link to ePoc site\" target=\"_blank\">https://epoc.inria.fr/</a>",
-    "MESSAGE_WITHOUT_LINK": "Conditions of use for ePoc content <strong>\"{epoc}\"</strong>:<br/><br/>Unless otherwise stated, the resources in this ePoc are distributed under the {licenseName} license. <br/><br/>If you are using ePoc content, here is the attribution to be added depending on the use:<br/>Credit: ePoc <strong>\"{epoc}\"</strong>, published under the {licenseName} license in the application <a href=\"https://epoc.inria.fr/\" title=\"Link to ePoc site\" target=\"_blank\">https://epoc.inria.fr/</a> ",
+    "MESSAGE": "Conditions of use for ePoc content <strong>\"{epoc}\"</strong>:<br/><br/>Unless otherwise stated, the resources in this ePoc are distributed under the {license} license.<br/><br/>If you are using ePoc content, provided that the license allows it, here is the attribution to be added depending on the use:<blockquote>{credit}</blockquote>",
+    "CREDIT": "Credit: {ePoc} <strong>\"{epoc}\"</strong>, published under the {license} license",
+    "CREDIT_WITH_AUTHOR": "Credit: {ePoc} <strong>\"{epoc}\"</strong> by {author}, published under the {license} license",
+    "LINK_TITLE": "Link to ePoc site",
     "MESSAGE_NO_LICENSE": "No license has been specified for the ePoc <strong>\"{epoc}\"</strong>.<br/><br/>We are not able to determine the terms of use for this content. For more information, we recommend checking the ePoc's presentation page or contacting the author or publisher of this ePoc directly."
   },
   "COMMENT_MODAL": {

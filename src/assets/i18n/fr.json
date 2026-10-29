@@ -123,8 +123,10 @@
   },
   "LICENSE_MODAL": {
     "HEADER": "Licence",
-    "MESSAGE": "Conditions d’utilisation des contenus de l'ePoc <strong>\"{epoc}\"</strong> :<br/><br/>Les ressources cet ePoc sont, sauf mention contraire, diffusées sous Licence <a href=\"{licenseUrl}\" title=\"Lien licence\" target=\"_blank\">{licenseName}</a>. <br/><br/>Si vous utilisez des contenus de l'ePoc, voici la mention à ajouter pour l'attribution selon l'utilisation :<br/>Crédit : ePoc <strong>\"{epoc}\"</strong>, publié sous licence {licenseName} dans l'application <a href=\"https://epoc.inria.fr/\" title=\"Lien vers site ePoc\" target=\"_blank\">https://epoc.inria.fr/</a>",
-    "MESSAGE_WITHOUT_LINK": "Conditions d’utilisation des contenus de l'ePoc <strong>\"{epoc}\"</strong> :<br/><br/>Les ressources cet ePoc sont, sauf mention contraire, diffusées sous Licence {licenseName}. <br/><br/>Si vous utilisez des contenus de l'ePoc, voici la mention à ajouter pour l'attribution selon l'utilisation :<br/>Crédit : ePoc <strong>\"{epoc}\"</strong>, publié sous licence {licenseName} dans l'application <a href=\"https://epoc.inria.fr/\" title=\"Lien vers site ePoc\" target=\"_blank\">https://epoc.inria.fr/</a> ",
+    "MESSAGE": "Conditions d’utilisation des contenus de l'ePoc <strong>\"{epoc}\"</strong> :<br/><br/>Les ressources de cet ePoc sont, sauf mention contraire, diffusées sous licence {license}.<br/><br/>Si vous utilisez des contenus de l'ePoc, sous réserve que la licence le permette, voici la mention à ajouter pour l'attribution selon l'utilisation :<blockquote>{credit}</blockquote>",
+    "CREDIT": "Crédit : {ePoc} <strong>\"{epoc}\"</strong>, publié sous licence {license}",
+    "CREDIT_WITH_AUTHOR": "Crédit : {ePoc} <strong>\"{epoc}\"</strong> par {author}, publié sous licence {license}",
+    "LINK_TITLE": "Lien vers le site ePoc",
     "MESSAGE_NO_LICENSE": "Aucune licence n'a été renseignée pour l'ePoc <strong>\"{epoc}\"</strong>.<br/><br/>Nous ne sommes pas en mesure de déterminer les conditions d'utilisation de ce contenu. Pour en savoir plus, nous vous recommandons de vérifier la page de présentation de l'ePoc ou de contacter directement l'auteur ou l'éditeur de cet ePoc."
   },
   "COMMENT_MODAL": {

@@ -776,6 +776,14 @@ ion-card{
   }
 }
 
+.alert-message blockquote {
+  margin: 8px 0 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--ion-color-inria);
+  background: var(--ion-color-step-50, #f2f2f2);
+  border-radius: 4px;
+}
+
 a.about-page-link{
   color: var(--ion-color-text);
 }

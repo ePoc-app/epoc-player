@@ -123,8 +123,10 @@
   },
   "LICENSE_MODAL": {
     "HEADER": "Lizenz",
-    "MESSAGE": "Nutzungsbedingungen für den ePoc-Inhalt <strong>\"{epoc}\"</strong>:<br/><br/>Sofern nicht anders angegeben, werden die Ressourcen in diesem ePoc unter der <a href=\"{licenseUrl}\" title=\"Lizenz-Link\" target=\"_blank\">{licenseName}</a>-Lizenz verbreitet. <br/><br/>Wenn Sie ePoc-Inhalte verwenden, hier ist die Angabe, die je nach Verwendung hinzugefügt werden muss:<br/>Credit: ePoc <strong>\"{epoc}\"</strong>, veröffentlicht unter der {licenseName}-Lizenz in der Anwendung <a href=\"https://epoc.inria.fr/\" title=\"Link zur ePoc-Seite\" target=\"_blank\">https://epoc.inria.fr/</a>",
-    "MESSAGE_WITHOUT_LINK": "Nutzungsbedingungen für den ePoc-Inhalt <strong>\"{epoc}\"</strong>:<br/><br/>Sofern nicht anders angegeben, werden die Ressourcen in diesem ePoc unter der {licenseName}-Lizenz verbreitet. <br/><br/>Wenn Sie ePoc-Inhalte verwenden, hier ist die Angabe, die je nach Verwendung hinzugefügt werden muss:<br/>Credit: ePoc <strong>\"{epoc}\"</strong>, veröffentlicht unter der {licenseName}-Lizenz in der Anwendung <a href=\"https://epoc.inria.fr/\" title=\"Link zur ePoc-Seite\" target=\"_blank\">https://epoc.inria.fr/</a> ",
+    "MESSAGE": "Nutzungsbedingungen für den ePoc-Inhalt <strong>\"{epoc}\"</strong>:<br/><br/>Sofern nicht anders angegeben, werden die Ressourcen in diesem ePoc unter der {license}-Lizenz verbreitet.<br/><br/>Wenn Sie ePoc-Inhalte verwenden, sofern die Lizenz dies erlaubt, hier ist die Angabe, die je nach Verwendung hinzugefügt werden muss:<blockquote>{credit}</blockquote>",
+    "CREDIT": "Credit: {ePoc} <strong>\"{epoc}\"</strong>, veröffentlicht unter der {license}-Lizenz",
+    "CREDIT_WITH_AUTHOR": "Credit: {ePoc} <strong>\"{epoc}\"</strong> von {author}, veröffentlicht unter der {license}-Lizenz",
+    "LINK_TITLE": "Link zur ePoc-Seite",
     "MESSAGE_NO_LICENSE": "Für den ePoc <strong>\"{epoc}\"</strong> wurde keine Lizenz angegeben.<br/><br/>Wir können die Nutzungsbedingungen für diesen Inhalt nicht bestimmen. Weitere Informationen erhalten Sie, indem Sie die Präsentationsseite des ePoc prüfen oder sich direkt an den Autor oder Herausgeber dieses ePoc wenden."
   },
   "COMMENT_MODAL": {
