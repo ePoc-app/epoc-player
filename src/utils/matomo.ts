@@ -27,6 +27,24 @@ const writeSession = (session: TrackingSession) => {
     }
 };
 
+const INITIALIZED_EPOCS_KEY = 'trackingInitializedEpocs';
+
+const readInitializedEpocs = (): string[] => {
+    try {
+        return JSON.parse(localStorage.getItem(INITIALIZED_EPOCS_KEY) || '[]');
+    } catch {
+        return [];
+    }
+};
+
+const writeInitializedEpocs = (epocIds: string[]) => {
+    try {
+        localStorage.setItem(INITIALIZED_EPOCS_KEY, JSON.stringify(epocIds));
+    } catch {
+        // The learner will be counted on every load
+    }
+};
+
 const touchSession = () => {
     const session = readSession();
     if (session) writeSession({ ...session, lastActivity: Date.now() });
@@ -61,11 +79,22 @@ export const trackEvent = (category: string, action: string, name?: string, valu
     }
 };
 
-// Track a session start (xAPI "initialized") unless the session of this ePoc is still running (reload, back from library)
+// Track a session start (xAPI "initialized" then "started" or "resumed") unless the session of this ePoc is still running (reload, back from library)
 export const trackSessionStart = (epocId: string, platform: string) => {
     const session = readSession();
     const now = Date.now();
     const isNewSession = !session || session.epocId !== epocId || now - session.lastActivity > SESSION_TIMEOUT;
     writeSession({ epocId, lastActivity: now });
-    if (isNewSession) trackEvent(epocId, `${epocId} / Session initialized`, platform);
+    if (!isNewSession) return;
+
+    trackEvent(epocId, `${epocId} / Session initialized`, platform);
+
+    // Count unique learners (xAPI "started": first session on this device) and returning ones (xAPI "resumed")
+    const initializedEpocs = readInitializedEpocs();
+    if (initializedEpocs.includes(epocId)) {
+        trackEvent(epocId, `${epocId} / Resumed`, platform);
+    } else {
+        writeInitializedEpocs([...initializedEpocs, epocId]);
+        trackEvent(epocId, `${epocId} / Started`, platform);
+    }
 };
