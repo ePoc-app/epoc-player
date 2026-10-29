@@ -21,6 +21,8 @@ import { i18n } from '@/i18n';
 import router from '@/router';
 import { useLibraryStore } from '@/stores/libraryStore';
 import { useAppMode } from '@/composables/useAppMode';
+import { trackSessionStart } from '@/utils/matomo';
+import { isScormAvailable } from '@/scorm';
 
 export const useEpocStore = defineStore('epoc', () => {
     // --- State ---
@@ -29,7 +31,9 @@ export const useEpocStore = defineStore('epoc', () => {
     const initialized = ref(false);
     const _epoc = ref<Epoc | null>(null);
     const _rootFolder = ref<string>('');
-    const { isPreview } = useAppMode();
+    const { isPreview, isStandalone } = useAppMode();
+
+    const trackingPlatform = () => isStandalone.value ? (isScormAvailable() ? 'SCORM' : 'HTML') : Capacitor.getPlatform();
 
     // --- Actions ---
 
@@ -51,6 +55,8 @@ export const useEpocStore = defineStore('epoc', () => {
             _epoc.value = initCourseContent(epoc);
 
             initialized.value = true;
+
+            trackSessionStart(id, trackingPlatform());
 
             return _epoc.value;
         } catch (error) {
