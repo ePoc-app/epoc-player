@@ -157,6 +157,8 @@ platform :android do
     upload_to_play_store(
       track: "internal",
       release_status: "completed",
+      # An old APK left in the Gradle outputs would be picked up along with the AAB
+      skip_upload_apk: true,
       metadata_path: ANDROID_METADATA,
       skip_upload_metadata: true,
       skip_upload_images: true,
