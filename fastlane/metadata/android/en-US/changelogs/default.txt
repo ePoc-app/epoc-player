@@ -1,5 +1,6 @@
-ePoc 3.0
-• New navigation menu inside ePocs, highlighting the current page
-• Easier list-based answer activities
-• Better display on recent Android phones
+ePoc 3.0.1
+• Custom collections: collection page, description and contact now also on mobile
+• The certificate shows the logo of the ePoc publisher
+• The score is updated as soon as you return to the score page
+• More complete attribution in the license
 • Bug fixes and improvements

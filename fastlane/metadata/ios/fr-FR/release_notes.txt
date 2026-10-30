@@ -1,1 +1,6 @@
-Corrections et améliorations.
+ePoc 3.0.1
+• Collections personnalisées : page de la collection, description et contact également sur mobile
+• L'attestation affiche le logo de l'éditeur de l'ePoc
+• Le score se met à jour dès le retour sur la page des scores
+• Mention d'attribution plus complète dans la licence
+• Corrections et améliorations diverses

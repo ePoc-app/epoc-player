@@ -1,5 +1,6 @@
-ePoc 3.0
-• Neues Navigationsmenü in den ePocs mit Anzeige der aktuellen Seite
-• Einfachere Aktivitäten mit Auswahllisten
-• Bessere Darstellung auf aktuellen Android-Smartphones
+ePoc 3.0.1
+• Eigene Sammlungen: Sammlungsseite, Beschreibung und Kontakt jetzt auch auf dem Smartphone
+• Die Bescheinigung zeigt das Logo des Herausgebers des ePoc
+• Die Punktzahl wird bei der Rückkehr zur Punkteseite sofort aktualisiert
+• Vollständigere Quellenangabe in der Lizenz
 • Fehlerbehebungen und Verbesserungen

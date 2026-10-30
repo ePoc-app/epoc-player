@@ -1,1 +1,6 @@
-Correzioni e miglioramenti.
+ePoc 3.0.1
+• Raccolte personalizzate: pagina della raccolta, descrizione e contatto anche su smartphone
+• L'attestato mostra il logo dell'editore dell'ePoc
+• Il punteggio si aggiorna non appena si torna alla pagina dei punteggi
+• Attribuzione più completa nella licenza
+• Correzioni e miglioramenti

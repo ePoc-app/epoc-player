@@ -1,1 +1,6 @@
-Fehlerbehebungen und Verbesserungen.
+ePoc 3.0.1
+• Eigene Sammlungen: Sammlungsseite, Beschreibung und Kontakt jetzt auch auf dem Smartphone
+• Die Bescheinigung zeigt das Logo des Herausgebers des ePoc
+• Die Punktzahl wird bei der Rückkehr zur Punkteseite sofort aktualisiert
+• Vollständigere Quellenangabe in der Lizenz
+• Fehlerbehebungen und Verbesserungen

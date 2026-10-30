@@ -1,5 +1,6 @@
-ePoc 3.0
-• Nuovo menu di navigazione negli ePoc, con la pagina corrente evidenziata
-• Attività con elenchi di scelta più semplici da usare
-• Migliore visualizzazione sui telefoni Android recenti
+ePoc 3.0.1
+• Raccolte personalizzate: pagina della raccolta, descrizione e contatto anche su smartphone
+• L'attestato mostra il logo dell'editore dell'ePoc
+• Il punteggio si aggiorna non appena si torna alla pagina dei punteggi
+• Attribuzione più completa nella licenza
 • Correzioni e miglioramenti
