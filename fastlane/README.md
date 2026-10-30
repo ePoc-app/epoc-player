@@ -48,7 +48,7 @@ Upload texts (and screenshots with screenshots:true) to the App Store version be
 [bundle exec] fastlane ios build
 ```
 
-Build a signed App Store IPA (version from package.json, build number = TestFlight latest + 1)
+Build a signed App Store IPA (version from package.json, build number = TestFlight latest + 1, or build_number:<n>)
 
 ### ios beta
 

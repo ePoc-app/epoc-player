@@ -62,16 +62,24 @@ platform :ios do
     )
   end
 
-  desc "Build a signed App Store IPA (version from package.json, build number = TestFlight latest + 1)"
-  lane :build do
-    build_number = latest_testflight_build_number(api_key_path: asc_api_key, initial_build_number: 0) + 1
+  desc "Build a signed App Store IPA (version from package.json, build number = TestFlight latest + 1, or build_number:<n>)"
+  lane :build do |options|
+    # A build uploaded outside fastlane is not listed until App Store Connect has processed it
+    build_number = options[:build_number]&.to_i || latest_testflight_build_number(api_key_path: asc_api_key, initial_build_number: 0) + 1
     build_web
     sh_root("npx", "cap", "sync", "ios")
+    # Without the Admin role, cloud signing is refused: export with a local App Store profile instead
+    profile = ENV["IOS_PROVISIONING_PROFILE"]
+    export_options = profile ? {
+      signingStyle: "manual",
+      provisioningProfiles: { CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier) => profile }
+    } : nil
     build_app(
       workspace: File.join(ROOT, "ios/App/App.xcworkspace"),
       scheme: "App",
       configuration: "Release",
       export_method: "app-store",
+      export_options: export_options,
       output_directory: BUILD_DIR,
       output_name: "ePoc-#{VERSION}-#{build_number}.ipa",
       xcargs: "MARKETING_VERSION=#{VERSION} CURRENT_PROJECT_VERSION=#{build_number} -allowProvisioningUpdates"

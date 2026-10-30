@@ -3,7 +3,7 @@
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import { defineConfig } from 'vite'
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 
 // Fix concurrent range request : https://github.com/ionic-team/capacitor/pull/8190
 function capacitorBugFix() {
@@ -28,11 +28,29 @@ function capacitorBugFix() {
   }
 }
 
+// Demo ePocs in public/ are for the dev server only, keep them out of the app packages
+function excludeDemoEpocs() {
+  let outDir = 'dist';
+  return {
+    name: 'exclude-demo-epocs',
+    apply: 'build' as const,
+
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+
+    closeBundle() {
+      rmSync(path.join(outDir, 'assets/demo'), { recursive: true, force: true });
+    },
+  }
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    capacitorBugFix()
+    capacitorBugFix(),
+    excludeDemoEpocs()
   ],
   resolve: {
     alias: {
