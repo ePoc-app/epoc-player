@@ -1,6 +1,2 @@
-ePoc 3.0.1
-• Colecciones personalizadas: página de la colección, descripción y contacto también en el móvil
-• El certificado muestra el logotipo del editor del ePoc
-• La puntuación se actualiza al volver a la página de puntuación
-• Atribución más completa en la licencia
+ePoc 3.0.2
 • Correcciones y mejoras
