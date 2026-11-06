@@ -363,7 +363,7 @@ export const useLibraryStore = defineStore('library', () => {
     }
 
     function isInriaEpoc(epoc: Epoc): boolean {
-        if (epoc.publisher) return epoc.publisher.id === illPublisherId;
+        if (epoc.publisher?.id) return epoc.publisher.id === illPublisherId;
         return !epoc.id.startsWith('local-') && findCollectionByEpocId(epoc.id) === illCollectionId;
     }
 
