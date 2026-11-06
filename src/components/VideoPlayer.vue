@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { IonIcon, IonSelect, IonSelectOption, IonItem, IonLabel, toastController, createGesture } from '@ionic/vue';
-import { ref, computed, onMounted, onUnmounted, PropType } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, PropType } from 'vue';
 import { logoClosedCaptioning, pause, play as playIcon, expand, copyOutline } from 'ionicons/icons';
 import { useMediaPlayerStore } from '@/stores/mediaPlayerStore';
 import { PlayPauseEvent } from '@/types/contents/media';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import playSvg from '@/assets/icon/play.svg?url';
 
+type Subtitle = { label: string; lang: string; src: string };
 const props = defineProps({
     src: String,
     poster: String,
     subtitles: {
-        type: Array as PropType<{ label: string; lang: string; src: string }[]>,
+        type: Array as PropType<Subtitle[]>,
         default: () => [],
     },
     title: String,
@@ -38,31 +39,51 @@ const emit = defineEmits<{
     (e: 'playPause', event: PlayPauseEvent): void;
 }>();
 
-// Store Pinia
 const mediaPlayerStore = useMediaPlayerStore();
 
-// Générer un ID unique pour ce lecteur
 const playerId = `video-player-${Math.random().toString(36).substring(2, 9)}`;
 
-// Références
 const video = ref<HTMLVideoElement | null>(null);
 const trackSelectRef = ref<typeof IonSelect | null>(null);
 const timelineProgress = ref<HTMLElement | null>(null);
 const timelineCursor = ref<HTMLElement | null>(null);
 
-// État local
 const hasPlayed = ref(false);
 const playing = ref(false);
 const trackSelected = ref('none');
 const progress = ref(0);
 const pipSupported = ref(false);
 
-const crossOrigin = computed(() => {
-    const isRemote = props.subtitles.some(
-        (sub) => /^https?:\/\//.test(sub.src) && new URL(sub.src).origin !== window.location.origin
-    );
-    return isRemote ? 'anonymous' : undefined;
-});
+const subtitleTracks = ref<Subtitle[]>([]);
+
+const isCrossOrigin = (src: string) => {
+    if (!/^https?:\/\//.test(src)) return false;
+    return new URL(src).origin !== window.location.origin;
+};
+
+const loadRemoteSubtitle = async (src: string): Promise<string> => {
+    try {
+        const response = await fetch(src);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return `data:text/vtt;charset=utf-8,${encodeURIComponent(await response.text())}`;
+    } catch (error) {
+        console.error(`Error loading subtitles ${src}:`, error);
+        return src;
+    }
+};
+
+watch(
+    () => props.subtitles,
+    async (subtitles) => {
+        subtitleTracks.value = await Promise.all(
+            subtitles.map(async (sub) => ({
+                ...sub,
+                src: isCrossOrigin(sub.src) ? await loadRemoteSubtitle(sub.src) : sub.src,
+            }))
+        );
+    },
+    { immediate: true }
+);
 
 const isDetached = computed(() => {
     return (
@@ -72,7 +93,6 @@ const isDetached = computed(() => {
     );
 });
 
-// Méthodes
 const play = () => {
     if (!video.value || isDetached.value) return;
     if (video.value.paused) {
@@ -187,7 +207,6 @@ const handleFullScreenChange = async () => {
     }
 };
 
-// Cycle de vie
 onMounted(() => {
     if (!video.value) return;
 
@@ -246,7 +265,6 @@ onMounted(() => {
         }
     });
 
-    // Gestion du geste sur la timeline
     if (!timelineCursor.value) return;
     let startCursorPos: DOMRect | null = null;
     let timelinePos: DOMRect | null = null;
@@ -278,7 +296,6 @@ onMounted(() => {
     gesture.enable(true);
 });
 
-// Nettoyage
 onUnmounted(() => {
     mediaPlayerStore.unregisterPlayer(playerId);
     if (video.value) mediaPlayerStore.clearActiveMedia(video.value);
@@ -291,10 +308,10 @@ onUnmounted(() => {
 <template>
     <div class="video-player">
         <div aria-hidden="true" class="video-container" :class="{ playing, detached: isDetached }" @click="play">
-            <video ref="video" playsinline preload="metadata" :crossorigin="crossOrigin" :src="src">
+            <video ref="video" playsinline preload="metadata" :src="src">
                 <track
-                    v-for="sub in subtitles"
-                    :key="sub.lang"
+                    v-for="sub in subtitleTracks"
+                    :key="sub.src"
                     kind="subtitles"
                     :label="sub.label"
                     :srclang="sub.lang"
