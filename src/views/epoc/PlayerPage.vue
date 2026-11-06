@@ -23,7 +23,7 @@ import { Content } from '@/types/contents/content';
 import { srcConvert } from '@/utils/pipes';
 import { menu } from 'ionicons/icons';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Swiper as SwiperObject } from 'swiper/types';
+import type { Swiper as SwiperObject } from 'swiper/types';
 import ChapterInfo from '@/views/epoc/content/ChapterInfo.vue';
 import ChapterEnd from './content/ChapterEnd.vue';
 import AppDebug from './content/AppDebug.vue';

@@ -11,7 +11,7 @@ import { computed, ref } from 'vue';
 import { alertController, onIonViewDidEnter, onIonViewWillEnter } from '@ionic/vue';
 import { useI18n } from 'vue-i18n';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Swiper as SwiperObject } from 'swiper/types';
+import type { Swiper as SwiperObject } from 'swiper/types';
 import { denormalize } from '@/utils/pipes';
 import Card from '@/components/Card.vue';
 import CommonQuestion from '@/components/questions/CommonQuestion.vue';
