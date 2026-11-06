@@ -57,6 +57,13 @@ const trackSelected = ref('none');
 const progress = ref(0);
 const pipSupported = ref(false);
 
+const crossOrigin = computed(() => {
+    const isRemote = props.subtitles.some(
+        (sub) => /^https?:\/\//.test(sub.src) && new URL(sub.src).origin !== window.location.origin
+    );
+    return isRemote ? 'anonymous' : undefined;
+});
+
 const isDetached = computed(() => {
     return (
         !!video.value &&
@@ -284,7 +291,7 @@ onUnmounted(() => {
 <template>
     <div class="video-player">
         <div aria-hidden="true" class="video-container" :class="{ playing, detached: isDetached }" @click="play">
-            <video ref="video" playsinline preload="metadata" :src="src">
+            <video ref="video" playsinline preload="metadata" :crossorigin="crossOrigin" :src="src">
                 <track
                     v-for="sub in subtitles"
                     :key="sub.lang"
