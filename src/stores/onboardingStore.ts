@@ -19,7 +19,7 @@ export const useOnboardingStore = defineStore('onboarding', () => {
         const lang = locale.value;
         const url = onboardingUrls[onboardingUrls[lang] ? lang : 'fr'];
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, { cache: 'no-cache' });
             if (!response.ok) throw new Error(`Failed to fetch onboarding: ${response.statusText}`);
             const data: OnboardingItem[] = await response.json();
             onboarding.value = data.filter(item => !removedOnboarding.value.includes(item.id));

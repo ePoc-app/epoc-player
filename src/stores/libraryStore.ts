@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { actionSheetController, alertController, toastController } from '@ionic/vue';
 import {
     listCircleOutline,
@@ -22,7 +22,6 @@ import { trackEvent } from '@/utils/matomo';
 import { useAppMode } from '@/composables/useAppMode';
 
 export const useLibraryStore = defineStore('library', () => {
-    // --- State ---
     const settingsStore = useSettingsStore();
     const readingStore = useReadingStore();
     const router = useRouter();
@@ -37,61 +36,60 @@ export const useLibraryStore = defineStore('library', () => {
     const epocProgresses = ref<Record<string, number>>({});
     const readings = ref<Reading[]>([]);
 
-    // --- Getters ---
     const collections = computed<Record<string, EpocCollection>>(() => ({
         ...officialCollections.value,
         ...customCollections.value,
     }));
 
-    // --- Actions ---
     async function refreshAll () {
         await fetchOfficialCollections();
         await fetchCustomCollections();
     }
 
+    async function fetchCollections(urls: string[]): Promise<Record<string, EpocCollection | null>> {
+        const results = await Promise.allSettled(
+            urls.map(async (url) => {
+                const collectionResponse = await fetch(url, { cache: 'no-cache' });
+                if (!collectionResponse.ok) throw new Error(`Failed to fetch collection: ${url}`);
+                const collection: EpocCollection = await collectionResponse.json();
+                Object.keys(collection.ePocs).forEach((id) => {
+                    collection.ePocs[id] = {
+                        ...collection.ePocs[id],
+                        downloading: false,
+                        downloaded: false,
+                        unzipping: false,
+                        opened: false,
+                    };
+                });
+                collection.url = url;
+                return collection;
+            })
+        );
+        return results.reduce((acc, result, index) => {
+            if (result.status === 'rejected') {
+                console.error(`Error fetching collection ${urls[index]}:`, result.reason);
+            }
+            acc[urls[index]] = result.status === 'fulfilled' ? result.value : null;
+            return acc;
+        }, {} as Record<string, EpocCollection | null>);
+    }
+
     async function fetchOfficialCollections() {
         if (isPreview.value) return;
         try {
-            officialCollections.value = JSON.parse(localStorage.getItem('officialCollections') || '{}');
-            const response = await fetch(officialCollectionsUrl);
+            const cachedCollections: Record<string, EpocCollection> = JSON.parse(localStorage.getItem('officialCollections') || '{}');
+            officialCollections.value = cachedCollections;
+            const response = await fetch(officialCollectionsUrl, { cache: 'no-cache' });
             if (!response.ok) throw new Error('Failed to fetch official collections');
             const collectionUrls: string[] = await response.json();
-            const collections = await Promise.all(
-                collectionUrls.map(async (url) => {
-                    const collectionResponse = await fetch(url);
-                    if (!collectionResponse.ok) throw new Error(`Failed to fetch collection: ${url}`);
-                    const collection: EpocCollection = await collectionResponse.json();
-                    Object.keys(collection.ePocs).forEach((id) => {
-                        collection.ePocs[id] = {
-                            ...collection.ePocs[id],
-                            downloading: false,
-                            downloaded: false,
-                            unzipping: false,
-                            opened: false,
-                        };
-                    });
-                    return collection;
-                })
-            );
-            const collectionsRecord = collections.reduce((acc, collection) => {
-                acc[collection.id] = collection;
-                return acc;
-            }, {} as Record<string, EpocCollection>);
+            const fetchedCollections = await fetchCollections(collectionUrls);
+            const collections = collectionUrls
+                .map((url) => fetchedCollections[url] ?? Object.values(cachedCollections).find((c) => c.url === url))
+                .filter((collection): collection is EpocCollection => !!collection);
+            const collectionsRecord = toCollectionsRecord(collections);
             localStorage.setItem('officialCollections', JSON.stringify(collectionsRecord));
             officialCollections.value = collectionsRecord;
-            // Check local content for each epoc
-            for (const collection of Object.values(collectionsRecord)) {
-                for (const epoc of Object.values(collection.ePocs)) {
-                    const localEpoc = await readEpocContent('epocs', epoc.id);
-                    if (localEpoc) {
-                        const downloadDate = localEpoc.lastModif
-                            ? new Date(localEpoc.lastModif.replace(/-/g, '/'))
-                            : new Date();
-                        const updateAvailable = new Date(epoc.lastModified) > downloadDate;
-                        updateEpocCollectionState(epoc.id, { downloaded: true, updateAvailable }, collection.id);
-                    }
-                }
-            }
+            await checkLocalEpocs(collectionsRecord);
         } catch (error) {
             console.error('Error fetching official collections:', error);
         }
@@ -105,44 +103,37 @@ export const useLibraryStore = defineStore('library', () => {
                 customCollections.value = {};
                 return;
             }
-            const collections = await Promise.all(
-                settingsStore.settings.customLibrairies.map(async (url) => {
-                    const collectionResponse = await fetch(url);
-                    if (!collectionResponse.ok) throw new Error(`Failed to fetch collection: ${url}`);
-                    const collection: EpocCollection = await collectionResponse.json();
-                    Object.keys(collection.ePocs).forEach((id) => {
-                        collection.ePocs[id] = {
-                            ...collection.ePocs[id],
-                            downloading: false,
-                            downloaded: false,
-                            unzipping: false,
-                            opened: false,
-                        };
-                    });
-                    collection.url = url;
-                    return collection;
-                })
+            const fetchedCollections = await fetchCollections(settingsStore.settings.customLibrairies);
+            const collections = Object.values(fetchedCollections).filter(
+                (collection): collection is EpocCollection => !!collection
             );
-            const collectionsRecord = collections.reduce((acc, collection) => {
-                acc[collection.id] = collection;
-                return acc;
-            }, {} as Record<string, EpocCollection>);
+            const collectionsRecord = toCollectionsRecord(collections);
             customCollections.value = collectionsRecord;
-            // Check local content for each epoc
-            for (const collection of Object.values(collectionsRecord)) {
-                for (const epoc of Object.values(collection.ePocs)) {
-                    const localEpoc = await readEpocContent('epocs', epoc.id);
-                    if (localEpoc) {
-                        const downloadDate = localEpoc.lastModif
-                            ? new Date(localEpoc.lastModif.replace(/-/g, '/'))
-                            : new Date();
-                        const updateAvailable = new Date(epoc.lastModified) > downloadDate;
-                        updateEpocCollectionState(epoc.id, { downloaded: true, updateAvailable }, collection.id, true);
-                    }
-                }
-            }
+            await checkLocalEpocs(collectionsRecord);
         } catch (error) {
             console.error('Error fetching custom collections:', error);
+        }
+    }
+
+    function toCollectionsRecord(collections: EpocCollection[]): Record<string, EpocCollection> {
+        return collections.reduce((acc, collection) => {
+            acc[collection.id] = collection;
+            return acc;
+        }, {} as Record<string, EpocCollection>);
+    }
+
+    async function checkLocalEpocs(collectionsRecord: Record<string, EpocCollection>) {
+        for (const collection of Object.values(collectionsRecord)) {
+            for (const epoc of Object.values(collection.ePocs)) {
+                const localEpoc = await readEpocContent('epocs', epoc.id);
+                if (localEpoc) {
+                    const downloadDate = localEpoc.lastModif
+                        ? new Date(localEpoc.lastModif.replace(/-/g, '/'))
+                        : new Date();
+                    const updateAvailable = new Date(epoc.lastModified) > downloadDate;
+                    updateEpocCollectionState(epoc.id, { downloaded: true, updateAvailable }, collection.id);
+                }
+            }
         }
     }
 
@@ -169,9 +160,9 @@ export const useLibraryStore = defineStore('library', () => {
             opened,
             updateAvailable = false,
         }: EpocLibraryState,
-        collectionId: string,
-        custom: boolean = false
+        collectionId: string
     ) {
+        const custom = !!customCollections.value[collectionId];
         const collectionToUpdate = custom ? customCollections.value : officialCollections.value;
         const epoc = collectionToUpdate[collectionId]?.ePocs[epocId];
         if (!epoc) {
@@ -231,7 +222,7 @@ export const useLibraryStore = defineStore('library', () => {
 
     async function checkCustomCollectionUrl(url: string): Promise<string | null> {
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, { cache: 'no-cache' });
             if (!response.ok) throw new Error('URL unreachable');
             const collection: EpocCollection = await response.json();
             if (!collection || !collection.id || !collection.ePocs) {
@@ -326,7 +317,6 @@ export const useLibraryStore = defineStore('library', () => {
         await presentToast(i18n.global.t('CUSTOM_COLLECTION.SUCCESS'), 'success');
         settingsStore.settings.customLibrairies.push(url);
         settingsStore.updateSettings({});
-        await fetchCustomCollections();
     }
 
     async function confirmReset(epoc: EpocLibrary, libraryId: string) {
@@ -372,31 +362,25 @@ export const useLibraryStore = defineStore('library', () => {
         await alert.present();
     }
 
-    // Publisher defined in the ePoc first, then the collection it comes from
     function isInriaEpoc(epoc: Epoc): boolean {
         if (epoc.publisher) return epoc.publisher.id === illPublisherId;
         return !epoc.id.startsWith('local-') && findCollectionByEpocId(epoc.id) === illCollectionId;
     }
 
-    // --- Initialization ---
     fetchOfficialCollections().then();
-    settingsStore.$subscribe((_, state) => {
-        if (state.settings) {
-            fetchCustomCollections();
-        }
-    });
+    watch(
+        () => settingsStore.settings.customLibrairies.join('\n'),
+        () => fetchCustomCollections()
+    );
     readingStore.$subscribe((_, state) => {
         readings.value = state.readings;
     });
 
     return {
-        // State
         officialCollections,
         customCollections,
         epocProgresses,
-        // Getters
         collections,
-        // Actions
         refreshAll,
         fetchOfficialCollections,
         fetchCustomCollections,
